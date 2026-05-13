@@ -9,9 +9,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
 switch ($page) {
 
-    // =========================
-    // ADMIN
-    // =========================
+    // Ini buat admin 
 
     case 'dashboard':
         require_once __DIR__ . '/app/controllers/admin/DashboardController.php';
@@ -74,9 +72,7 @@ switch ($page) {
         break;
 
 
-    // =========================
-    // MAHASISWA
-    // =========================
+    // ini buat mahasiswa
 
     case 'mahasiswa':
     case 'mahasiswa-dashboard':
@@ -122,11 +118,6 @@ switch ($page) {
             require_once __DIR__ . '/app/views/mahasiswa/nilai.php';
         }
         break;
-
-
-    // =========================
-    // DEFAULT
-    // =========================
 
     default:
         header('Location: index.php?page=dashboard');

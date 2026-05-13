@@ -11,7 +11,6 @@ class MahasiswaController
         $this->model = new MahasiswaModel();
     }
 
-    // Halaman dashboard
     public function dashboard()
     {
         $stats = $this->model->getStats();
@@ -25,7 +24,6 @@ class MahasiswaController
         include 'app/views/layouts/footer.php';
     }
 
-    // Halaman kuis tersedia
     public function kuisTersedia()
     {
         $filter = $_GET['filter'] ?? 'semua';
@@ -39,7 +37,6 @@ class MahasiswaController
         include 'app/views/layouts/footer.php';
     }
 
-    // Halaman kerjakan kuis
     public function kerjakan()
     {
         $kuis_id = $_GET['id'] ?? 1;
@@ -54,7 +51,6 @@ class MahasiswaController
         include 'app/views/layouts/footer.php';
     }
 
-    // Halaman nilai saya
     public function nilaiSaya()
     {
         $filter = $_GET['matkul'] ?? 'semua';
