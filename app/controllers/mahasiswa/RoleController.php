@@ -3,27 +3,31 @@
 
 require_once 'app/models/AkunModel.php';
 
-class RoleController {
+class RoleController
+{
 
     private $model;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->model = new AkunModel();
     }
 
-    public function index() {
-        $akuns        = $this->model->getAll();
-        $pageTitle    = 'Role Management';
+    public function index()
+    {
+        $akuns = $this->model->getAll();
+        $pageTitle = 'Role Management';
         $pageSubtitle = 'Atur hak akses pengguna sistem.';
-        $activePage   = 'role';
+        $activePage = 'role';
         require 'app/views/admin/role/index.php';
     }
 
-    
-    public function ubahRole() {
+
+    public function ubahRole()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id        = (int)($_POST['id']        ?? 0);
-            $roleBaru  = trim($_POST['role_baru']  ?? '');
+            $id = (int) ($_POST['id'] ?? 0);
+            $roleBaru = trim($_POST['role_baru'] ?? '');
             $rolesValid = ['admin', 'dosen', 'mahasiswa'];
 
             if ($id > 0 && in_array($roleBaru, $rolesValid)) {

@@ -1,22 +1,29 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-require_once 'config/database.php';
+require_once __DIR__ . '/config/database.php';
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
 switch ($page) {
 
+    // =========================
+    // ADMIN
+    // =========================
+
     case 'dashboard':
-        require_once 'app/controllers/DashboardController.php';
+        require_once __DIR__ . '/app/controllers/admin/DashboardController.php';
         $controller = new DashboardController();
         $controller->index();
         break;
 
     case 'akun':
-        require_once 'app/controllers/AkunController.php';
+        require_once __DIR__ . '/app/controllers/admin/AkunController.php';
         $controller = new AkunController();
         $action = isset($_GET['action']) ? $_GET['action'] : 'index';
+
         if (method_exists($controller, $action)) {
             $controller->$action();
         } else {
@@ -25,9 +32,10 @@ switch ($page) {
         break;
 
     case 'matkul':
-        require_once 'app/controllers/MatkulController.php';
+        require_once __DIR__ . '/app/controllers/admin/MatkulController.php';
         $controller = new MatkulController();
         $action = isset($_GET['action']) ? $_GET['action'] : 'index';
+
         if (method_exists($controller, $action)) {
             $controller->$action();
         } else {
@@ -36,9 +44,10 @@ switch ($page) {
         break;
 
     case 'kelas':
-        require_once 'app/controllers/KelasController.php';
+        require_once __DIR__ . '/app/controllers/admin/KelasController.php';
         $controller = new KelasController();
         $action = isset($_GET['action']) ? $_GET['action'] : 'index';
+
         if (method_exists($controller, $action)) {
             $controller->$action();
         } else {
@@ -47,9 +56,10 @@ switch ($page) {
         break;
 
     case 'role':
-        require_once 'app/controllers/RoleController.php';
+        require_once __DIR__ . '/app/controllers/admin/RoleController.php';
         $controller = new RoleController();
         $action = isset($_GET['action']) ? $_GET['action'] : 'index';
+
         if (method_exists($controller, $action)) {
             $controller->$action();
         } else {
@@ -58,10 +68,65 @@ switch ($page) {
         break;
 
     case 'monitoring':
-        require_once 'app/controllers/MonitoringController.php';
+        require_once __DIR__ . '/app/controllers/admin/MonitoringController.php';
         $controller = new MonitoringController();
         $controller->index();
         break;
+
+
+    // =========================
+    // MAHASISWA
+    // =========================
+
+    case 'mahasiswa':
+    case 'mahasiswa-dashboard':
+        require_once __DIR__ . '/app/controllers/mahasiswa/MahasiswaController.php';
+        $controller = new MahasiswaController();
+
+        if (method_exists($controller, 'dashboard')) {
+            $controller->dashboard();
+        } else {
+            require_once __DIR__ . '/app/views/mahasiswa/dashboard.php';
+        }
+        break;
+
+    case 'kuis-tersedia':
+        require_once __DIR__ . '/app/controllers/mahasiswa/MahasiswaController.php';
+        $controller = new MahasiswaController();
+
+        if (method_exists($controller, 'kuisTersedia')) {
+            $controller->kuisTersedia();
+        } else {
+            require_once __DIR__ . '/app/views/mahasiswa/kuis-tersedia.php';
+        }
+        break;
+
+    case 'kerjakan':
+        require_once __DIR__ . '/app/controllers/mahasiswa/MahasiswaController.php';
+        $controller = new MahasiswaController();
+
+        if (method_exists($controller, 'kerjakan')) {
+            $controller->kerjakan();
+        } else {
+            require_once __DIR__ . '/app/views/mahasiswa/kerjakan.php';
+        }
+        break;
+
+    case 'nilai':
+        require_once __DIR__ . '/app/controllers/mahasiswa/MahasiswaController.php';
+        $controller = new MahasiswaController();
+
+        if (method_exists($controller, 'nilai')) {
+            $controller->nilai();
+        } else {
+            require_once __DIR__ . '/app/views/mahasiswa/nilai.php';
+        }
+        break;
+
+
+    // =========================
+    // DEFAULT
+    // =========================
 
     default:
         header('Location: index.php?page=dashboard');

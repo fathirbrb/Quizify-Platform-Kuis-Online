@@ -1,11 +1,11 @@
 <?php
 
-$pageTitle    = isset($pageTitle)    ? $pageTitle    : 'Dashboard Admin';
+$pageTitle = isset($pageTitle) ? $pageTitle : 'Dashboard Admin';
 $pageSubtitle = isset($pageSubtitle) ? $pageSubtitle : '';
 
 $adminNama = isset($_SESSION['nama']) ? $_SESSION['nama'] : 'Administrator';
 
-$words    = explode(' ', $adminNama);
+$words = explode(' ', $adminNama);
 $initials = strtoupper(substr($words[0], 0, 1));
 if (isset($words[1])) {
     $initials .= strtoupper(substr($words[1], 0, 1));

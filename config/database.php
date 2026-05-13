@@ -1,14 +1,15 @@
 <?php
 
 
-define('DB_HOST', 'localhost');
+define('DB_HOST', '127.0.0.1');
+define('DB_PORT', '3307');
 define('DB_NAME', 'quizify_db');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
 
-
-function getDB() {
+function getDB()
+{
     static $pdo = null;
 
     if ($pdo === null) {

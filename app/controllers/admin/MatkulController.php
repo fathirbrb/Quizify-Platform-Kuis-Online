@@ -3,36 +3,40 @@
 
 require_once 'app/models/MatkulModel.php';
 
-class MatkulController {
+class MatkulController
+{
 
     private $model;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->model = new MatkulModel();
     }
 
-    public function index() {
-        $matkuls      = $this->model->getAll();
-        $pageTitle    = 'Kelola Mata Kuliah';
+    public function index()
+    {
+        $matkuls = $this->model->getAll();
+        $pageTitle = 'Kelola Mata Kuliah';
         $pageSubtitle = 'Tambah, edit, dan hapus mata kuliah.';
-        $activePage   = 'matkul';
+        $activePage = 'matkul';
 
         require 'app/views/admin/matkul/index.php';
     }
 
-    public function tambah() {
-        $pageTitle    = 'Tambah Mata Kuliah';
+    public function tambah()
+    {
+        $pageTitle = 'Tambah Mata Kuliah';
         $pageSubtitle = 'Tambah mata kuliah baru.';
-        $activePage   = 'matkul';
-        $error        = '';
-        $sukses       = '';
-        $matkul       = null;
+        $activePage = 'matkul';
+        $error = '';
+        $sukses = '';
+        $matkul = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'kode' => trim($_POST['kode'] ?? ''),
                 'nama' => trim($_POST['nama'] ?? ''),
-                'sks'  => (int)($_POST['sks'] ?? 2),
+                'sks' => (int) ($_POST['sks'] ?? 2),
             ];
 
             if (empty($data['kode']) || empty($data['nama'])) {
@@ -48,25 +52,32 @@ class MatkulController {
         require 'app/views/admin/matkul/form.php';
     }
 
-    public function edit() {
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-        if ($id === 0) { header('Location: index.php?page=matkul'); exit; }
+    public function edit()
+    {
+        $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+        if ($id === 0) {
+            header('Location: index.php?page=matkul');
+            exit;
+        }
 
-        $matkul       = $this->model->getById($id);
-        $pageTitle    = 'Edit Mata Kuliah';
+        $matkul = $this->model->getById($id);
+        $pageTitle = 'Edit Mata Kuliah';
         $pageSubtitle = 'Ubah data mata kuliah.';
-        $activePage   = 'matkul';
-        $error        = '';
-        $sukses       = '';
+        $activePage = 'matkul';
+        $error = '';
+        $sukses = '';
 
-        if (!$matkul) { header('Location: index.php?page=matkul'); exit; }
+        if (!$matkul) {
+            header('Location: index.php?page=matkul');
+            exit;
+        }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
-                'id'   => $id,
+                'id' => $id,
                 'kode' => trim($_POST['kode'] ?? ''),
                 'nama' => trim($_POST['nama'] ?? ''),
-                'sks'  => (int)($_POST['sks'] ?? 2),
+                'sks' => (int) ($_POST['sks'] ?? 2),
             ];
 
             if (empty($data['kode']) || empty($data['nama'])) {
@@ -81,9 +92,12 @@ class MatkulController {
         require 'app/views/admin/matkul/form.php';
     }
 
-    public function hapus() {
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-        if ($id > 0) { $this->model->hapus($id); }
+    public function hapus()
+    {
+        $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+        if ($id > 0) {
+            $this->model->hapus($id);
+        }
         header('Location: index.php?page=matkul&sukses=hapus');
         exit;
     }

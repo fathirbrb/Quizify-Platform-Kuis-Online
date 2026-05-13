@@ -3,42 +3,46 @@
 
 require_once 'app/models/AkunModel.php';
 
-class AkunController {
+class AkunController
+{
 
     private $model;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->model = new AkunModel();
     }
 
-    
-    public function index() {
-        $search     = isset($_GET['search']) ? trim($_GET['search']) : '';
-        $filterRole = isset($_GET['role'])   ? $_GET['role']         : '';
+
+    public function index()
+    {
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $filterRole = isset($_GET['role']) ? $_GET['role'] : '';
 
         $akuns = $this->model->getAll($search, $filterRole);
 
-        $pageTitle    = 'Kelola Akun';
+        $pageTitle = 'Kelola Akun';
         $pageSubtitle = 'Tambah, edit, dan hapus akun dosen maupun mahasiswa.';
-        $activePage   = 'akun';
+        $activePage = 'akun';
 
         require 'app/views/admin/akun/index.php';
     }
 
-    
-    public function tambah() {
-        $pageTitle    = 'Tambah Akun';
+
+    public function tambah()
+    {
+        $pageTitle = 'Tambah Akun';
         $pageSubtitle = 'Buat akun pengguna baru.';
-        $activePage   = 'akun';
-        $error        = '';
-        $sukses       = '';
+        $activePage = 'akun';
+        $error = '';
+        $sukses = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
-                'nama'    => trim($_POST['nama']    ?? ''),
-                'email'   => trim($_POST['email']   ?? ''),
-                'password'=> trim($_POST['password'] ?? ''),
-                'role'    => trim($_POST['role']    ?? 'mahasiswa'),
+                'nama' => trim($_POST['nama'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
+                'password' => trim($_POST['password'] ?? ''),
+                'role' => trim($_POST['role'] ?? 'mahasiswa'),
                 'nim_nip' => trim($_POST['nim_nip'] ?? ''),
             ];
 
@@ -58,21 +62,22 @@ class AkunController {
         require 'app/views/admin/akun/form.php';
     }
 
-    
-    public function edit() {
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+    public function edit()
+    {
+        $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
         if ($id === 0) {
             header('Location: index.php?page=akun');
             exit;
         }
 
-        $akun         = $this->model->getById($id);
-        $pageTitle    = 'Edit Akun';
+        $akun = $this->model->getById($id);
+        $pageTitle = 'Edit Akun';
         $pageSubtitle = 'Ubah data akun pengguna.';
-        $activePage   = 'akun';
-        $error        = '';
-        $sukses       = '';
+        $activePage = 'akun';
+        $error = '';
+        $sukses = '';
 
         if (!$akun) {
             header('Location: index.php?page=akun');
@@ -81,10 +86,10 @@ class AkunController {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
-                'id'      => $id,
-                'nama'    => trim($_POST['nama']    ?? ''),
-                'email'   => trim($_POST['email']   ?? ''),
-                'role'    => trim($_POST['role']    ?? 'mahasiswa'),
+                'id' => $id,
+                'nama' => trim($_POST['nama'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
+                'role' => trim($_POST['role'] ?? 'mahasiswa'),
                 'nim_nip' => trim($_POST['nim_nip'] ?? ''),
             ];
 
@@ -97,16 +102,17 @@ class AkunController {
             } else {
                 $this->model->edit($data);
                 $sukses = 'Akun berhasil diperbarui!';
-                $akun   = $this->model->getById($id);
+                $akun = $this->model->getById($id);
             }
         }
 
         require 'app/views/admin/akun/form.php';
     }
 
-    
-    public function hapus() {
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+    public function hapus()
+    {
+        $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
         if ($id > 0) {
             $this->model->hapus($id);
         }

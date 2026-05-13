@@ -1,16 +1,19 @@
 <?php
 
 
-class DashboardModel {
+class DashboardModel
+{
 
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = getDB();
     }
 
-    
-    public function getStats() {
+
+    public function getStats()
+    {
         $stats = [];
 
         $stmt = $this->db->query("SELECT COUNT(*) as total FROM users WHERE role = 'dosen'");
@@ -30,8 +33,9 @@ class DashboardModel {
         return $stats;
     }
 
-    
-    public function getAktivitasTerbaru($limit = 5) {
+
+    public function getAktivitasTerbaru($limit = 5)
+    {
         $stmt = $this->db->prepare(
             "SELECT al.aksi, al.ip_address, al.created_at, u.nama, u.role
              FROM activity_log al
