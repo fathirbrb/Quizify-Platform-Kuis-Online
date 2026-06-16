@@ -33,7 +33,7 @@
         <a href="#fitur" class="nav-link">Fitur</a>
         <a href="#peran" class="nav-link">Peran</a>
         <a href="#cara-kerja" class="nav-link">Cara Kerja</a>
-        <a href="index.php?page=login" class="nav-cta">Masuk →</a>
+        <a href="index.php?page=login" class="nav-cta">Masuk</a>
     </div>
 </nav>
 
@@ -62,10 +62,10 @@
 
         <div class="hero-actions">
             <a href="index.php?page=login" class="hero-btn-primary">
-                Mulai Sekarang →
+                Mulai Sekarang
             </a>
             <a href="#fitur" class="hero-btn-secondary">
-                Pelajari Fitur ↓
+                Pelajari Fitur
             </a>
         </div>
 
@@ -90,15 +90,7 @@
     </div>
 </section>
 
-<!-- ═══════════════ FEATURES ═══════════════ -->
-<section class="section features-section" id="fitur">
-    <div class="section-header reveal">
-        <span class="section-tag">✦ Fitur Utama</span>
-        <h2 class="section-title">Semua yang Kamu Butuhkan</h2>
-        <p class="section-desc">
-            Fitur lengkap untuk membuat pengalaman kuis yang efektif dan menyenangkan.
-        </p>
-    </div>
+
 
     <div class="features-grid">
         <div class="feature-card reveal">
