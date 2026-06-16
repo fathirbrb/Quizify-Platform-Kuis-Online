@@ -6,8 +6,43 @@ class DosenModel
 {
     public function getStats($dosenId)
     {
-        $matkul = $this->getMatkulDiampu($dosenId);
+        $db = $this->db();
+        if ($db) {
+            // Count total kuis
+            $stmt = $db->prepare('SELECT COUNT(*) FROM kuis WHERE dosen_id = :dosen_id');
+            $stmt->execute(['dosen_id' => $dosenId]);
+            $totalKuis = (int)$stmt->fetchColumn();
 
+            // Count total soal
+            $stmt = $db->prepare('SELECT COUNT(*) FROM soal s JOIN kuis q ON q.id = s.kuis_id WHERE q.dosen_id = :dosen_id');
+            $stmt->execute(['dosen_id' => $dosenId]);
+            $totalSoal = (int)$stmt->fetchColumn();
+
+            // Count total mahasiswa
+            $stmt = $db->prepare('SELECT COUNT(DISTINCT mk.mahasiswa_id) FROM mahasiswa_kelas mk JOIN dosen_kelas dk ON dk.kelas_id = mk.kelas_id WHERE dk.dosen_id = :dosen_id');
+            $stmt->execute(['dosen_id' => $dosenId]);
+            $totalMahasiswa = (int)$stmt->fetchColumn();
+
+            // Count total kelas
+            $stmt = $db->prepare('SELECT COUNT(DISTINCT kelas_id) FROM dosen_kelas WHERE dosen_id = :dosen_id');
+            $stmt->execute(['dosen_id' => $dosenId]);
+            $totalKelas = (int)$stmt->fetchColumn();
+
+            // Count total matkul
+            $stmt = $db->prepare('SELECT COUNT(DISTINCT matkul_id) FROM dosen_kelas WHERE dosen_id = :dosen_id');
+            $stmt->execute(['dosen_id' => $dosenId]);
+            $totalMatkul = (int)$stmt->fetchColumn();
+
+            return [
+                'kuis' => $totalKuis,
+                'soal' => $totalSoal,
+                'mahasiswa' => $totalMahasiswa,
+                'kelas' => $totalKelas,
+                'matkul' => $totalMatkul,
+            ];
+        }
+
+        $matkul = $this->dummyMatkul();
         return [
             'kuis' => 12,
             'soal' => 120,
@@ -39,11 +74,7 @@ class DosenModel
                  ORDER BY mk.nama ASC, k.nama ASC'
             );
             $stmt->execute(['dosen_id' => $dosenId]);
-            $rows = $stmt->fetchAll();
-
-            if (!empty($rows)) {
-                return $rows;
-            }
+            return $stmt->fetchAll();
         }
 
         return $this->dummyMatkul();
@@ -77,11 +108,7 @@ class DosenModel
                  ORDER BY k.tahun_ajaran DESC, k.nama ASC'
             );
             $stmt->execute(['dosen_id' => $dosenId]);
-            $rows = $stmt->fetchAll();
-
-            if (!empty($rows)) {
-                return $rows;
-            }
+            return $stmt->fetchAll();
         }
 
         $grouped = [];
@@ -93,7 +120,6 @@ class DosenModel
                     'kelas' => $mk['kelas'],
                     'tahun_ajaran' => $mk['tahun_ajaran'],
                     'jurusan' => 'Sistem Informasi',
-                    'kode_kelas' => 'KLS-' . $id,
                     'invite_code' => 'KLS' . $id,
                     'jumlah_matkul' => 0,
                     'jumlah_kuis' => 0,
@@ -304,11 +330,7 @@ class DosenModel
 
             $stmt = $db->prepare($sql);
             $stmt->execute($params);
-            $rows = $stmt->fetchAll();
-
-            if (!empty($rows)) {
-                return $rows;
-            }
+            return $stmt->fetchAll();
         }
 
         return $this->filterDummyNilai($matkulId, $kelasId);
@@ -389,11 +411,7 @@ class DosenModel
 
             $stmt = $db->prepare($sql);
             $stmt->execute($params);
-            $rows = $stmt->fetchAll();
-
-            if (!empty($rows)) {
-                return $rows;
-            }
+            return $stmt->fetchAll();
         }
 
         return $this->filterDummyMonitoring($matkulId, $kelasId, $status);
@@ -486,6 +504,8 @@ class DosenModel
                         q.status,
                         q.waktu_mulai,
                         q.waktu_selesai,
+                        q.deskripsi,
+                        (SELECT COUNT(*) FROM soal s WHERE s.kuis_id = q.id) AS jumlah_soal,
                         mk.id AS matkul_id,
                         k.id AS kelas_id,
                         mk.kode AS kode_matkul,
@@ -518,11 +538,7 @@ class DosenModel
 
             $stmt = $db->prepare($sql);
             $stmt->execute($params);
-            $rows = $stmt->fetchAll();
-
-            if (!empty($rows)) {
-                return $rows;
-            }
+            return $stmt->fetchAll();
         }
 
         return $this->filterDummyKuis($matkulId, $kelasId, $status);
@@ -701,6 +717,72 @@ class DosenModel
             $db->rollBack();
             return false;
         }
+    }
+
+    public function getAllMatkul()
+    {
+        $db = $this->db();
+        if ($db) {
+            return $db->query('SELECT id, kode, nama, sks FROM mata_kuliah ORDER BY nama ASC')->fetchAll();
+        }
+        return [
+            ['id' => 1, 'kode' => 'MK001', 'nama' => 'Pemrograman Web', 'sks' => 3],
+            ['id' => 2, 'kode' => 'MK002', 'nama' => 'Basis Data', 'sks' => 3],
+        ];
+    }
+
+    public function tambahMatkulKeKelas($dosenId, $kelasId, $matkulId)
+    {
+        $db = $this->db();
+        if (!$db) {
+            return false;
+        }
+
+        // check if relation already exists
+        $stmt = $db->prepare('SELECT COUNT(*) FROM dosen_kelas WHERE dosen_id = :dosen_id AND kelas_id = :kelas_id AND matkul_id = :matkul_id');
+        $stmt->execute([
+            'dosen_id' => $dosenId,
+            'kelas_id' => $kelasId,
+            'matkul_id' => $matkulId,
+        ]);
+        if ((int)$stmt->fetchColumn() > 0) {
+            return true;
+        }
+
+        $stmt = $db->prepare('INSERT INTO dosen_kelas (dosen_id, kelas_id, matkul_id) VALUES (:dosen_id, :kelas_id, :matkul_id)');
+        return $stmt->execute([
+            'dosen_id' => $dosenId,
+            'kelas_id' => $kelasId,
+            'matkul_id' => $matkulId,
+        ]);
+    }
+
+    public function createAndTambahMatkulKeKelas($dosenId, $kelasId, $kode, $nama, $sks)
+    {
+        $db = $this->db();
+        if (!$db) {
+            return false;
+        }
+
+        // Check if subject code already exists
+        $stmt = $db->prepare('SELECT id FROM mata_kuliah WHERE kode = :kode LIMIT 1');
+        $stmt->execute(['kode' => $kode]);
+        $row = $stmt->fetch();
+
+        if ($row) {
+            $matkulId = (int)$row['id'];
+        } else {
+            // insert new subject
+            $stmt = $db->prepare('INSERT INTO mata_kuliah (kode, nama, sks) VALUES (:kode, :nama, :sks)');
+            $stmt->execute([
+                'kode' => $kode,
+                'nama' => $nama,
+                'sks' => $sks,
+            ]);
+            $matkulId = (int)$db->lastInsertId();
+        }
+
+        return $this->tambahMatkulKeKelas($dosenId, $kelasId, $matkulId);
     }
 
     private function db()

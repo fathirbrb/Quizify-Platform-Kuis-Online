@@ -185,6 +185,137 @@ class MahasiswaModel
         ];
     }
 
+    public function getKelasSaya($mahasiswaId)
+    {
+        $db = $this->db();
+
+        if (!$db || $mahasiswaId <= 0) {
+            return [];
+        }
+
+        $stmt = $db->prepare(
+            'SELECT
+                k.id,
+                k.nama,
+                COALESCE(j.nama, k.jurusan) AS jurusan,
+                k.kode_kelas,
+                k.tahun_ajaran,
+                k.invite_code,
+                mk.joined_at,
+                (SELECT COUNT(DISTINCT q.id)
+                 FROM kuis q
+                 WHERE q.kelas_id = k.id) AS jumlah_kuis,
+                (SELECT COUNT(DISTINCT q2.id)
+                 FROM kuis q2
+                 LEFT JOIN hasil_kuis hk ON hk.kuis_id = q2.id AND hk.mahasiswa_id = :mahasiswa_id_count
+                 WHERE q2.kelas_id = k.id
+                   AND q2.status IN ("aktif", "terjadwal")
+                   AND hk.id IS NULL) AS kuis_belum_selesai,
+                (SELECT u.nama
+                 FROM dosen_kelas dk
+                 JOIN users u ON u.id = dk.dosen_id
+                 WHERE dk.kelas_id = k.id
+                 LIMIT 1) AS nama_dosen
+             FROM mahasiswa_kelas mk
+             JOIN kelas k ON k.id = mk.kelas_id
+             LEFT JOIN jurusan j ON j.id = k.jurusan_id
+             WHERE mk.mahasiswa_id = :mahasiswa_id
+             ORDER BY mk.joined_at DESC, k.nama ASC'
+        );
+        $stmt->execute([
+            'mahasiswa_id' => $mahasiswaId,
+            'mahasiswa_id_count' => $mahasiswaId,
+        ]);
+
+        return $stmt->fetchAll();
+    }
+
+    public function getKuisPerKelas($mahasiswaId, $kelasId)
+    {
+        $db = $this->db();
+
+        if (!$db || $mahasiswaId <= 0 || $kelasId <= 0) {
+            return [];
+        }
+
+        $this->finalisasiKuisKadaluarsa($mahasiswaId);
+
+        $stmt = $db->prepare(
+            'SELECT
+                q.id,
+                q.judul AS nama_kuis,
+                q.deskripsi,
+                q.durasi,
+                q.status AS status_kuis,
+                q.waktu_mulai,
+                q.waktu_selesai,
+                q.created_at,
+                mk.kode AS kode_matkul,
+                mk.nama AS nama_matkul,
+                mk.sks,
+                COALESCE(kp.status, "belum") AS status_pengerjaan,
+                hk.nilai,
+                COUNT(DISTINCT s.id) AS jumlah_soal
+             FROM kuis q
+             JOIN mata_kuliah mk ON mk.id = q.matkul_id
+             LEFT JOIN kuis_pengerjaan kp
+                ON kp.kuis_id = q.id
+                AND kp.mahasiswa_id = :mahasiswa_id_kp
+                AND kp.id = (
+                    SELECT MAX(kp2.id)
+                    FROM kuis_pengerjaan kp2
+                    WHERE kp2.kuis_id = q.id
+                    AND kp2.mahasiswa_id = :mahasiswa_id_kp2
+                )
+             LEFT JOIN hasil_kuis hk
+                ON hk.kuis_id = q.id
+                AND hk.mahasiswa_id = :mahasiswa_id_hk
+             LEFT JOIN soal s ON s.kuis_id = q.id
+             WHERE q.kelas_id = :kelas_id
+             GROUP BY
+                q.id, q.judul, q.deskripsi, q.durasi, q.status,
+                q.waktu_mulai, q.waktu_selesai, q.created_at,
+                mk.kode, mk.nama, mk.sks,
+                kp.status, hk.nilai
+             ORDER BY q.created_at DESC, q.id DESC'
+        );
+        $stmt->execute([
+            'mahasiswa_id_kp' => $mahasiswaId,
+            'mahasiswa_id_kp2' => $mahasiswaId,
+            'mahasiswa_id_hk' => $mahasiswaId,
+            'kelas_id' => $kelasId,
+        ]);
+
+        return array_map([$this, 'formatKuisRow'], $stmt->fetchAll());
+    }
+
+    public function getKelasById($kelasId)
+    {
+        $db = $this->db();
+
+        if (!$db || $kelasId <= 0) {
+            return null;
+        }
+
+        $stmt = $db->prepare(
+            'SELECT
+                k.id,
+                k.nama,
+                COALESCE(j.nama, k.jurusan) AS jurusan,
+                k.kode_kelas,
+                k.tahun_ajaran,
+                k.invite_code,
+                k.deskripsi
+             FROM kelas k
+             LEFT JOIN jurusan j ON j.id = k.jurusan_id
+             WHERE k.id = :id
+             LIMIT 1'
+        );
+        $stmt->execute(['id' => $kelasId]);
+
+        return $stmt->fetch() ?: null;
+    }
+
     public function getFilterOptions($mahasiswaId = 0)
     {
         $kuis = $this->getKuisTersedia($mahasiswaId);

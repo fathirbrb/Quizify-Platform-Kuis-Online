@@ -176,12 +176,49 @@ class DosenController extends Controller
     public function mahasiswa()
     {
         $dosenId = (int) ($_SESSION['user_id'] ?? 0);
-        [$filterMatkul, $filterKelas] = $this->getRelasiFilter();
-        $filterStatus = $_GET['status'] ?? '';
-        $matkulDiampu = $this->model->getMatkulDiampu($dosenId);
-        $allMhs = $this->model->getMonitoringMahasiswa($dosenId, $filterMatkul, $filterKelas, $filterStatus);
 
-        $this->view('dosen/mahasiswa', compact('matkulDiampu', 'allMhs', 'filterMatkul', 'filterKelas', 'filterStatus'));
+        $selectedKelasId = isset($_GET['kelas_id']) && $_GET['kelas_id'] !== '' ? (int) $_GET['kelas_id'] : null;
+        $selectedMatkulId = isset($_GET['matkul_id']) && $_GET['matkul_id'] !== '' ? (int) $_GET['matkul_id'] : null;
+        $filterStatus = $_GET['status'] ?? '';
+
+        $kelasDiampu = $this->model->getKelasDiampu($dosenId);
+        $matkulDiampu = $this->model->getMatkulDiampu($dosenId);
+
+        $allMhs = [];
+        if ($selectedKelasId !== null && $selectedMatkulId !== null) {
+            $allMhs = $this->model->getMonitoringMahasiswa($dosenId, $selectedMatkulId, $selectedKelasId, $filterStatus);
+        }
+
+        $selectedKelas = null;
+        if ($selectedKelasId !== null) {
+            foreach ($kelasDiampu as $kls) {
+                if ((int) $kls['kelas_id'] === $selectedKelasId) {
+                    $selectedKelas = $kls;
+                    break;
+                }
+            }
+        }
+
+        $selectedMatkul = null;
+        if ($selectedMatkulId !== null) {
+            foreach ($matkulDiampu as $mk) {
+                if ((int) $mk['matkul_id'] === $selectedMatkulId && (int) $mk['kelas_id'] === $selectedKelasId) {
+                    $selectedMatkul = $mk;
+                    break;
+                }
+            }
+        }
+
+        $this->view('dosen/mahasiswa', compact(
+            'kelasDiampu',
+            'matkulDiampu',
+            'allMhs',
+            'selectedKelasId',
+            'selectedMatkulId',
+            'selectedKelas',
+            'selectedMatkul',
+            'filterStatus'
+        ));
     }
 
     public function detailMahasiswa()
@@ -224,20 +261,51 @@ class DosenController extends Controller
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'nama' => trim($_POST['nama'] ?? ''),
-                'jurusan' => trim($_POST['jurusan'] ?? ''),
-                'kode_kelas' => trim($_POST['kode_kelas'] ?? ''),
-            ];
-
-            if ($data['nama'] === '') {
-                $error = 'Nama kelas wajib diisi.';
-            } elseif ($this->model->updateKelasDosen($dosenId, $kelasId, $data)) {
-                ActivityModel::log($dosenId, 'Dosen mengedit konfigurasi kelas: ' . $data['nama'], 'dosen', $kelasId, null);
-                $success = 'Konfigurasi kelas berhasil diperbarui.';
-                $kelas = $this->model->getKelasById($dosenId, $kelasId);
+            if (isset($_POST['action']) && $_POST['action'] === 'tambah_matkul') {
+                $pilihan = $_POST['pilihan_matkul'] ?? 'pilih';
+                if ($pilihan === 'pilih') {
+                    $matkulId = (int) ($_POST['matkul_id'] ?? 0);
+                    if ($matkulId > 0) {
+                        if ($this->model->tambahMatkulKeKelas($dosenId, $kelasId, $matkulId)) {
+                            ActivityModel::log($dosenId, 'Dosen menambahkan mata kuliah ke kelas', 'dosen', $kelasId, null);
+                            $success = 'Mata kuliah berhasil ditambahkan ke kelas.';
+                        } else {
+                            $error = 'Gagal menambahkan mata kuliah ke kelas.';
+                        }
+                    } else {
+                        $error = 'Pilih mata kuliah yang valid.';
+                    }
+                } else {
+                    $kode = trim($_POST['kode'] ?? '');
+                    $nama = trim($_POST['nama_matkul'] ?? '');
+                    $sks = min(3, max(1, (int) ($_POST['sks'] ?? 2)));
+                    if ($kode !== '' && $nama !== '') {
+                        if ($this->model->createAndTambahMatkulKeKelas($dosenId, $kelasId, $kode, $nama, $sks)) {
+                            ActivityModel::log($dosenId, 'Dosen membuat dan menambahkan mata kuliah baru ke kelas', 'dosen', $kelasId, null);
+                            $success = 'Mata kuliah baru berhasil dibuat dan ditambahkan ke kelas.';
+                        } else {
+                            $error = 'Gagal membuat/menambahkan mata kuliah baru.';
+                        }
+                    } else {
+                        $error = 'Kode dan Nama mata kuliah wajib diisi.';
+                    }
+                }
             } else {
-                $error = 'Konfigurasi kelas gagal disimpan.';
+                $data = [
+                    'nama' => trim($_POST['nama'] ?? ''),
+                    'jurusan' => trim($_POST['jurusan'] ?? ''),
+                    'kode_kelas' => trim($_POST['kode_kelas'] ?? ''),
+                ];
+
+                if ($data['nama'] === '') {
+                    $error = 'Nama kelas wajib diisi.';
+                } elseif ($this->model->updateKelasDosen($dosenId, $kelasId, $data)) {
+                    ActivityModel::log($dosenId, 'Dosen mengedit konfigurasi kelas: ' . $data['nama'], 'dosen', $kelasId, null);
+                    $success = 'Konfigurasi kelas berhasil diperbarui.';
+                    $kelas = $this->model->getKelasById($dosenId, $kelasId);
+                } else {
+                    $error = 'Konfigurasi kelas gagal disimpan.';
+                }
             }
         }
 
@@ -246,8 +314,20 @@ class DosenController extends Controller
         $jurusanList = $this->model->getJurusanList();
         $keywordMahasiswa = trim($_GET['search_mahasiswa'] ?? '');
         $mahasiswaKelas = $this->model->getMahasiswaByKelas($dosenId, $kelasId, $keywordMahasiswa);
+        $allMatkulList = $this->model->getAllMatkul();
 
-        $this->view('dosen/konfigurasi_kelas', compact('kelas', 'kelasId', 'matkulDiampu', 'allKuis', 'jurusanList', 'mahasiswaKelas', 'keywordMahasiswa', 'error', 'success'));
+        $this->view('dosen/konfigurasi_kelas', compact(
+            'kelas',
+            'kelasId',
+            'matkulDiampu',
+            'allKuis',
+            'jurusanList',
+            'mahasiswaKelas',
+            'keywordMahasiswa',
+            'error',
+            'success',
+            'allMatkulList'
+        ));
     }
 
     public function hapusMahasiswaKelas()
@@ -267,12 +347,56 @@ class DosenController extends Controller
     public function hasil()
     {
         $dosenId = (int) ($_SESSION['user_id'] ?? 0);
-        [$filterMatkul, $filterKelas] = $this->getRelasiFilter();
-        $matkulDiampu = $this->model->getMatkulDiampu($dosenId);
-        $nilai = $this->model->getLaporanNilai($dosenId, $filterMatkul, $filterKelas);
-        $stats = $this->model->getNilaiStats($nilai);
 
-        $this->view('dosen/hasil', compact('matkulDiampu', 'nilai', 'stats', 'filterMatkul', 'filterKelas'));
+        $selectedKelasId = isset($_GET['kelas_id']) && $_GET['kelas_id'] !== '' ? (int) $_GET['kelas_id'] : null;
+        $selectedMatkulId = isset($_GET['matkul_id']) && $_GET['matkul_id'] !== '' ? (int) $_GET['matkul_id'] : null;
+
+        $kelasDiampu = $this->model->getKelasDiampu($dosenId);
+        $matkulDiampu = $this->model->getMatkulDiampu($dosenId);
+
+        $nilai = [];
+        $stats = [
+            'tertinggi' => 0,
+            'terendah' => 0,
+            'rata_rata' => 0,
+            'kelulusan' => 0,
+        ];
+
+        if ($selectedKelasId !== null && $selectedMatkulId !== null) {
+            $nilai = $this->model->getLaporanNilai($dosenId, $selectedMatkulId, $selectedKelasId);
+            $stats = $this->model->getNilaiStats($nilai);
+        }
+
+        $selectedKelas = null;
+        if ($selectedKelasId !== null) {
+            foreach ($kelasDiampu as $kls) {
+                if ((int) $kls['kelas_id'] === $selectedKelasId) {
+                    $selectedKelas = $kls;
+                    break;
+                }
+            }
+        }
+
+        $selectedMatkul = null;
+        if ($selectedMatkulId !== null) {
+            foreach ($matkulDiampu as $mk) {
+                if ((int) $mk['matkul_id'] === $selectedMatkulId && (int) $mk['kelas_id'] === $selectedKelasId) {
+                    $selectedMatkul = $mk;
+                    break;
+                }
+            }
+        }
+
+        $this->view('dosen/hasil', compact(
+            'kelasDiampu',
+            'matkulDiampu',
+            'nilai',
+            'stats',
+            'selectedKelasId',
+            'selectedMatkulId',
+            'selectedKelas',
+            'selectedMatkul'
+        ));
     }
 
     private function getRelasiFilter()

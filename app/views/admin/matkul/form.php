@@ -46,7 +46,7 @@ require 'app/views/layouts/sidebar.php';
                 <div class="form-group">
                     <label for="sks">Jumlah SKS</label>
                     <select id="sks" name="sks" class="form-control">
-                        <?php for ($i = 1; $i <= 6; $i++): ?>
+                        <?php for ($i = 1; $i <= 3; $i++): ?>
                             <option value="<?= $i ?>" <?= ($matkul['sks'] ?? 2) == $i ? 'selected' : '' ?>>
                                 <?= $i ?> SKS
                             </option>

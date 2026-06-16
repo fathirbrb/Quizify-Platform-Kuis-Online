@@ -50,16 +50,35 @@ class MahasiswaController
     public function kuisTersedia()
     {
         $mahasiswaId = (int) ($_SESSION['user_id'] ?? 0);
-        $filterStatus = $_GET['status'] ?? '';
-        [$filterMatkul, $filterKelas] = $this->getRelasiFilter();
-        $filterOptions = $this->model->getFilterOptions($mahasiswaId);
-        $kuisList = $this->model->getKuisTersedia($mahasiswaId, $filterStatus, $filterMatkul, $filterKelas);
+        $kelasList = $this->model->getKelasSaya($mahasiswaId);
 
         include 'app/views/layouts/MahasiswaLayout/header.php';
         include 'app/views/layouts/MahasiswaLayout/sidebar.php';
         include 'app/views/layouts/MahasiswaLayout/navbar.php';
 
         include 'app/views/mahasiswa/kuis-tersedia.php';
+
+        include 'app/views/layouts/MahasiswaLayout/footer.php';
+    }
+
+    public function detailKelas()
+    {
+        $mahasiswaId = (int) ($_SESSION['user_id'] ?? 0);
+        $kelasId = (int) ($_GET['id'] ?? 0);
+
+        $kelas = $this->model->getKelasById($kelasId);
+        if (!$kelas) {
+            header('Location: index.php?page=kuis-tersedia');
+            exit;
+        }
+
+        $kuisList = $this->model->getKuisPerKelas($mahasiswaId, $kelasId);
+
+        include 'app/views/layouts/MahasiswaLayout/header.php';
+        include 'app/views/layouts/MahasiswaLayout/sidebar.php';
+        include 'app/views/layouts/MahasiswaLayout/navbar.php';
+
+        include 'app/views/mahasiswa/detail-kelas.php';
 
         include 'app/views/layouts/MahasiswaLayout/footer.php';
     }
