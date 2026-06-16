@@ -90,7 +90,15 @@
     </div>
 </section>
 
-
+<!-- ═══════════════ FEATURES ═══════════════ -->
+<section class="section features-section" id="fitur">
+    <div class="section-header reveal">
+        <span class="section-tag">✦ Fitur Utama</span>
+        <h2 class="section-title">Semua yang Kamu Butuhkan</h2>
+        <p class="section-desc">
+            Fitur lengkap untuk membuat pengalaman kuis yang efektif dan menyenangkan.
+        </p>
+    </div>
 
     <div class="features-grid">
         <div class="feature-card reveal">
