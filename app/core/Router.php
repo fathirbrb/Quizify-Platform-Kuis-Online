@@ -38,6 +38,7 @@ class Router
         'mahasiswa-dashboard' => ['mahasiswa/MahasiswaController.php', 'MahasiswaController', 'dashboard', 'mahasiswa'],
         'mahasiswa-gabung-kelas' => ['mahasiswa/MahasiswaController.php', 'MahasiswaController', 'gabungKelas', 'mahasiswa'],
         'kuis-tersedia' => ['mahasiswa/MahasiswaController.php', 'MahasiswaController', 'kuisTersedia', 'mahasiswa'],
+        'detail-kelas' => ['mahasiswa/MahasiswaController.php', 'MahasiswaController', 'detailKelas', 'mahasiswa'],
         'mahasiswa-kuis-feed' => ['mahasiswa/MahasiswaController.php', 'MahasiswaController', 'kuisFeed', 'mahasiswa'],
         'kerjakan-kuis' => ['mahasiswa/MahasiswaController.php', 'MahasiswaController', 'kerjakanKuis', 'mahasiswa'],
         'mahasiswa-kuis-berjalan-feed' => ['mahasiswa/MahasiswaController.php', 'MahasiswaController', 'kuisBerjalanFeed', 'mahasiswa'],

@@ -41,52 +41,51 @@ require 'app/views/layouts/sidebar.php';
             </div>
         </div>
 
-        <div class="card">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nama Kelas</th>
-                        <th>Jurusan</th>
-                        <th>Kode Kelas</th>
-                        <th>Kode Masuk</th>
-                        <th>Tahun Ajaran</th>
-                        <th>Dosen</th>
-                        <th>Mahasiswa</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($kelas)): ?>
-                        <?php $no = 1;
-                        foreach ($kelas as $kls): ?>
-                            <tr>
-                                <td><?= $no++ ?></td>
-                                <td><?= htmlspecialchars($kls['nama']) ?></td>
-                                <td><?= htmlspecialchars($kls['jurusan'] ?? '-') ?></td>
-                                <td><?= htmlspecialchars($kls['kode_kelas'] ?? '-') ?></td>
-                                <td><span class="badge badge-orange"><?= htmlspecialchars($kls['invite_code'] ?? '-') ?></span></td>
-                                <td><?= htmlspecialchars($kls['tahun_ajaran'] ?? '-') ?></td>
-                                <td><?= (int) ($kls['jumlah_dosen'] ?? 0) ?></td>
-                                <td><?= (int) ($kls['jumlah_mahasiswa'] ?? 0) ?></td>
-                                <td>
-                                    <a href="index.php?page=kelas&action=edit&id=<?= $kls['id'] ?>"
-                                        class="btn btn-secondary btn-sm">Edit</a>
-                                    <a href="index.php?page=kelas&action=hapus&id=<?= $kls['id'] ?>"
-                                        class="btn btn-danger btn-sm"
-                                        onclick="return konfirmasiHapus('<?= htmlspecialchars($kls['nama']) ?>')">Hapus</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="9" class="text-center text-muted">Belum ada kelas.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-            <div class="table-info">Total <?= count($kelas) ?> kelas</div>
-        </div>
+        <?php if (!empty($kelas)): ?>
+            <?php $colors = ['blue', 'green', 'purple', 'orange']; ?>
+            <div class="kelas-grid" style="margin-bottom:1rem;">
+                <?php foreach ($kelas as $index => $kls): ?>
+                    <?php $color = $colors[$index % count($colors)]; ?>
+                    <div class="kelas-card card">
+                        <div class="kelas-card-header kelas-<?= $color ?>">
+                            <div class="kelas-card-icon">
+                                <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path></svg>
+                            </div>
+                            <div class="kelas-card-stats">
+                                <span class="kelas-badge"><?= (int) ($kls['jumlah_dosen'] ?? 0) ?> Dosen · <?= (int) ($kls['jumlah_mahasiswa'] ?? 0) ?> Mhs</span>
+                            </div>
+                        </div>
+                        <div class="kelas-card-body">
+                            <h3 class="kelas-nama"><?= htmlspecialchars($kls['nama']) ?></h3>
+                            <p class="kelas-jurusan"><?= htmlspecialchars($kls['jurusan'] ?? '-') ?></p>
+                            <div class="kelas-meta">
+                                <span class="kelas-meta-item">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                    Kode: <?= htmlspecialchars($kls['invite_code'] ?? '-') ?>
+                                </span>
+                                <span class="kelas-meta-item">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    <?= htmlspecialchars($kls['tahun_ajaran'] ?? '-') ?>
+                                </span>
+                            </div>
+                            <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
+                                <a href="index.php?page=kelas&action=edit&id=<?= $kls['id'] ?>" class="btn btn-secondary btn-sm">Edit</a>
+                                <a href="index.php?page=kelas&action=hapus&id=<?= $kls['id'] ?>"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return konfirmasiHapus('<?= htmlspecialchars($kls['nama']) ?>')">Hapus</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (empty($kelas)): ?>
+            <div class="card empty-row">
+                <p>Belum ada kelas.</p>
+                <p class="text-muted" style="margin-top:0.5rem;">Klik tombol "Tambah Kelas" di atas untuk membuat kelas baru.</p>
+            </div>
+        <?php endif; ?>
 
     </section>
 
