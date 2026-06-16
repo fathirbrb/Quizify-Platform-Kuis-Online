@@ -1,0 +1,55 @@
+.checkbox-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--gray-600);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.checkbox-line input {
+    width: auto;
+}
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.page-content {
+    overflow-x: auto;
+}
+
+.card {
+    overflow: hidden;
+}
+
+.table {
+    min-width: 720px;
+}
+
+.table td .btn {
+    white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}
