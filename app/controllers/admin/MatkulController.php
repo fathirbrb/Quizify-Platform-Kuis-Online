@@ -36,7 +36,7 @@ class MatkulController
             $data = [
                 'kode' => trim($_POST['kode'] ?? ''),
                 'nama' => trim($_POST['nama'] ?? ''),
-                'sks' => (int) ($_POST['sks'] ?? 2),
+                'sks' => min(3, max(1, (int) ($_POST['sks'] ?? 2))),
             ];
 
             if (empty($data['kode']) || empty($data['nama'])) {
@@ -77,7 +77,7 @@ class MatkulController
                 'id' => $id,
                 'kode' => trim($_POST['kode'] ?? ''),
                 'nama' => trim($_POST['nama'] ?? ''),
-                'sks' => (int) ($_POST['sks'] ?? 2),
+                'sks' => min(3, max(1, (int) ($_POST['sks'] ?? 2))),
             ];
 
             if (empty($data['kode']) || empty($data['nama'])) {

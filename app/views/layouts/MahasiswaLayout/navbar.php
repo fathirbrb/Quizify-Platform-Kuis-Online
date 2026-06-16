@@ -30,7 +30,6 @@ if (isset($words[1])) {
             <div class="avatar"><?= htmlspecialchars($initials) ?></div>
             <span class="avatar-name"><?= htmlspecialchars($nama) ?></span>
         </div>
-        <a href="index.php?page=logout" class="btn-logout" title="Keluar"
-           onclick="return confirm('Yakin ingin logout?')">&#x2192; Logout</a>
+        <a href="#modal-logout" class="btn-logout" title="Keluar">&#x2192; Logout</a>
     </div>
 </header>

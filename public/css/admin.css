@@ -8,67 +8,64 @@
 .sidebar {
     background: var(--white);
     border-right: 1px solid var(--gray-200);
-    padding: 1.25rem 0.75rem;
+    padding: 1.5rem 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
+    gap: 0.15rem;
     position: sticky;
     top: 0;
     height: 100vh;
     overflow-y: auto;
 }
 
-
 .sidebar-logo {
-    padding: 0.25rem 0.5rem 1.1rem;
+    padding: 0.5rem 0.75rem 1.25rem;
     border-bottom: 1px solid var(--gray-200);
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
 }
 
 .sidebar-logo .logo-text {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 800;
     color: var(--primary);
     letter-spacing: -0.5px;
 }
 
 .sidebar-logo .logo-sub {
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     color: var(--gray-400);
-    font-weight: 500;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-top: 2px;
+    letter-spacing: 1px;
+    margin-top: 3px;
 }
 
-
 .nav-group-label {
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
     color: var(--gray-400);
-    padding: 0.25rem 0.7rem;
-    margin-top: 0.25rem;
+    padding: 0.4rem 0.75rem;
+    margin-top: 0.5rem;
 }
 
 .sidebar-nav {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.35rem;
 }
-
 
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 0.55rem;
-    padding: 0.55rem 0.8rem;
-    border-radius: 999px;
+    gap: 0.75rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 10px;
     color: var(--gray-600);
     font-weight: 500;
     font-size: 0.85rem;
-    transition: background 0.12s, color 0.12s;
+    transition: background 0.15s, color 0.15s;
 }
 
 .nav-item:hover {
@@ -77,20 +74,26 @@
 }
 
 .nav-item.active {
-    background: var(--primary-light);
-    color: var(--primary);
+    background: var(--primary);
+    color: var(--white);
     font-weight: 600;
 }
 
 .nav-item .nav-icon {
-    font-size: 0.7rem;
-    width: 16px;
-    text-align: center;
-    opacity: 0.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
 }
 
-.nav-item.active .nav-icon {
-    opacity: 1;
+.nav-item .nav-svg {
+    width: 18px;
+    height: 18px;
+}
+
+.nav-item.nav-logout {
+    color: var(--red);
 }
 
 .nav-item.nav-logout:hover {
@@ -98,10 +101,9 @@
     color: var(--red);
 }
 
-
 .sidebar-footer {
     margin-top: auto;
-    padding-top: 0.75rem;
+    padding-top: 1rem;
     border-top: 1px solid var(--gray-200);
 }
 
@@ -110,7 +112,6 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    overflow: hidden;
 }
 
 
@@ -706,4 +707,354 @@
 .log-tag-submit {
     background: var(--purple-light);
     color: var(--purple);
+}
+
+/* ── Kelas Cards Grid ── */
+.kelas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.kelas-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--gray-200);
+}
+
+.kelas-card:hover {
+    border-color: var(--accent);
+}
+
+.kelas-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.25rem 1rem;
+    min-height: 80px;
+}
+
+.kelas-card-header.kelas-blue {
+    background: var(--accent-light);
+    color: var(--accent);
+}
+
+.kelas-card-header.kelas-green {
+    background: var(--green-light);
+    color: #16A34A;
+}
+
+.kelas-card-header.kelas-purple {
+    background: var(--purple-light);
+    color: var(--purple);
+}
+
+.kelas-card-header.kelas-orange {
+    background: var(--orange-light);
+    color: var(--orange);
+}
+
+.kelas-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.kelas-badge {
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid var(--gray-200);
+    border-radius: 999px;
+    color: var(--gray-600);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+}
+
+.kelas-card-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.kelas-nama {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--black);
+    margin-bottom: 0.15rem;
+}
+
+.kelas-jurusan {
+    font-size: 0.8rem;
+    color: var(--gray-400);
+    margin-bottom: 0.65rem;
+}
+
+.kelas-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.kelas-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: var(--gray-600);
+}
+
+.kelas-meta-item svg {
+    flex-shrink: 0;
+}
+
+
+/* ── Detail Kelas Header ── */
+.kelas-detail-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.kelas-detail-header h1 {
+    font-size: 1.3rem;
+    margin-bottom: 0.2rem;
+}
+
+.kelas-detail-meta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
+/* ── Quiz Timeline ── */
+.timeline {
+    position: relative;
+    padding-left: 28px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--gray-200);
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.25rem;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -28px;
+    top: 1.1rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid var(--gray-200);
+    background: var(--white);
+    z-index: 1;
+}
+
+.timeline-dot-blue {
+    border-color: var(--accent);
+    background: var(--accent-light);
+}
+
+.timeline-dot-green {
+    border-color: #16A34A;
+    background: var(--green-light);
+}
+
+.timeline-dot-orange {
+    border-color: var(--orange);
+    background: var(--orange-light);
+}
+
+.timeline-dot-purple {
+    border-color: var(--purple);
+    background: var(--purple-light);
+}
+
+.timeline-dot-gray {
+    border-color: var(--gray-400);
+    background: var(--gray-100);
+}
+
+.timeline-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.timeline-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.timeline-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--black);
+    margin-bottom: 0.15rem;
+}
+
+.timeline-matkul {
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.timeline-schedule {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.35rem;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+    .kelas-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Custom Target Modals (CSS-only) ── */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 1000;
+}
+.modal-overlay:target {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal-card {
+    background: white;
+    border-radius: var(--radius);
+    max-width: 500px;
+    width: 90%;
+    padding: 1.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+}
+.modal-overlay:target .modal-card {
+    transform: scale(1);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+.modal-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--black);
+}
+.modal-close {
+    text-decoration: none;
+    color: var(--gray-400);
+    font-size: 1.5rem;
+    line-height: 1;
+}
+.modal-close:hover {
+    color: var(--black);
+}
+
+/* ── Sidebar Collapsed States (Desktop Only, width > 900px) ── */
+@media (min-width: 901px) {
+    .sidebar-collapsed .layout {
+        grid-template-columns: 68px 1fr !important;
+        transition: grid-template-columns 0.25s ease;
+    }
+    
+    .sidebar-collapsed .sidebar {
+        padding: 1.5rem 0.5rem !important;
+        align-items: center !important;
+        transition: padding 0.25s ease;
+    }
+    
+    .sidebar-collapsed .logo-full {
+        display: none !important;
+    }
+    
+    .sidebar-collapsed .logo-short {
+        display: block !important;
+    }
+    
+    .sidebar-collapsed .nav-group-label {
+        display: none !important;
+    }
+    
+    .sidebar-collapsed .nav-text {
+        display: none !important;
+    }
+    
+    .sidebar-collapsed .nav-item {
+        justify-content: center !important;
+        padding: 0.65rem 0 !important;
+        gap: 0 !important;
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+    }
+    
+    .sidebar-collapsed .sidebar-logo {
+        border-bottom: none !important;
+        margin-bottom: 0.5rem !important;
+        padding: 0.5rem 0 !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 0.35rem !important;
+    }
+
+    .sidebar-collapsed .sidebar-chevron {
+        transform: rotate(180deg);
+    }
+}
+
+.sidebar-chevron {
+    transition: transform 0.25s ease, color 0.15s;
+}
+.sidebar-logo:hover .sidebar-chevron {
+    color: var(--primary) !important;
 }
