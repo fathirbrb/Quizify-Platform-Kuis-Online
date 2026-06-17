@@ -36,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             min-height: 100vh;
         }
 
-        /* ── Left Branding Column ── */
         .login-left {
             flex: 1.1;
             background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #3B82F6 100%);
@@ -49,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             overflow: hidden;
         }
 
-        /* Soft drifting background orbs on the left side */
         .login-left::before {
             content: '';
             position: absolute;
@@ -144,7 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             z-index: 2;
         }
 
-        /* ── Right Form Column ── */
         .login-right {
             flex: 0.9;
             background: #EFF6FF;
@@ -287,7 +284,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #3B82F6;
         }
 
-        /* ── Submit Button ── */
         .pill-submit {
             width: 100%;
             padding: 0.85rem;
@@ -350,7 +346,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="login-container">
 
-    <!-- Left Branding Panel -->
     <div class="login-left">
         <div class="login-brand-group">
             <div class="login-brand-logo">
@@ -378,13 +373,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-    <!-- Right Form Panel -->
     <div class="login-right">
         <div class="login-form-card">
             <h2 class="card-title">Welcome Back</h2>
             <p class="card-subtitle">Silakan masuk ke akun Anda untuk memulai.</p>
 
-            <!-- Error Notification -->
             <?php if (!empty($error)): ?>
             <div class="login-alert">
                 <span class="login-alert-icon">
@@ -436,7 +429,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
 
-            <!-- Back to Home -->
+
             <div class="back-to-home">
                 Don't have an account? <a href="index.php" class="back-link">Sign Up / Back</a>
             </div>
@@ -446,7 +439,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <script>
-// Toggle password visibility
 const toggleBtn = document.getElementById('togglePw');
 const pwInput   = document.getElementById('password');
 toggleBtn.addEventListener('click', () => {
@@ -457,7 +449,7 @@ toggleBtn.addEventListener('click', () => {
 });
 
 
-// Auto-focus email input
+
 window.addEventListener('DOMContentLoaded', () => {
     const emailInput = document.getElementById('email');
     if (!emailInput.value) emailInput.focus();

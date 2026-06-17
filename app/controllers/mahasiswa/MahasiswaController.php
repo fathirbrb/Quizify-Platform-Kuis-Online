@@ -112,7 +112,6 @@ class MahasiswaController
                 header('Location: index.php?page=nilai');
                 exit;
             }
-
             $kuisInfo = $this->model->getKuisById($kuis_id);
             $pengerjaan = $this->model->getOrCreatePengerjaan($mahasiswaId, $kuis_id);
             $sisaDetik = $this->model->getSisaWaktuKuis((int) ($pengerjaan['id'] ?? 0), (int) ($kuisInfo['durasi'] ?? 30));
