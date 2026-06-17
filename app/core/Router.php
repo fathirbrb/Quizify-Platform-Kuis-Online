@@ -10,9 +10,7 @@ class Router
         'akun' => ['admin/AkunController.php', 'AkunController', null, 'admin'],
         'matkul' => ['admin/MatkulController.php', 'MatkulController', null, 'admin'],
         'kelas' => ['admin/KelasController.php', 'KelasController', null, 'admin'],
-        'role' => ['admin/RoleController.php', 'RoleController', null, 'admin'],
-        'monitoring' => ['admin/MonitoringController.php', 'MonitoringController', 'index', 'admin'],
-        'profile' => ['admin/ProfileController.php', 'ProfileController', null, 'admin'],
+
 
         'dosen-dashboard' => ['dosen/DosenController.php', 'DosenController', 'dashboard', 'dosen'],
         'dosen-kuis' => ['dosen/DosenController.php', 'DosenController', 'kuis', 'dosen'],

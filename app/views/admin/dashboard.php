@@ -64,7 +64,7 @@ require 'app/views/layouts/sidebar.php';
                 <span class="quick-icon">&#43;</span>
                 <span>Tambah Kelas</span>
             </a>
-            <a href="index.php?page=monitoring" class="quick-card">
+            <a href="index.php?page=admin-activity-log" class="quick-card">
                 <span class="quick-icon">&#43;</span>
                 <span>Lihat Log</span>
             </a>
@@ -72,7 +72,7 @@ require 'app/views/layouts/sidebar.php';
 
         <div class="section-header" style="margin-top: 1.5rem;">
             <h2>Aktivitas Terbaru</h2>
-            <a href="index.php?page=monitoring" class="btn btn-secondary btn-sm">Lihat Semua</a>
+            <a href="index.php?page=admin-activity-log" class="btn btn-secondary btn-sm">Lihat Semua</a>
         </div>
 
         <div class="card">

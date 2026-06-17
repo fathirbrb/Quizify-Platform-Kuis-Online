@@ -1,3 +1,11 @@
+<?php
+$defaultEmail = 'admin@quizify.com';
+$defaultPassword = 'password';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $defaultEmail = $_POST['email'] ?? '';
+    $defaultPassword = '';
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -304,77 +312,6 @@
             transform: scale(0.98);
         }
 
-        /* ── Divider ── */
-        .custom-divider {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin: 1.75rem 0;
-        }
-
-        .custom-divider::before,
-        .custom-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #E5E7EB;
-        }
-
-        .divider-text {
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: #9CA3AF;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* ── Demo Accounts Grid ── */
-        .demo-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            margin-bottom: 1.75rem;
-        }
-
-        .demo-pill-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            padding: 0.7rem 0.5rem;
-            background: white;
-            border: 1px solid #E5E7EB;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: #4B5563;
-            transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
-            font-family: inherit;
-        }
-
-        .demo-pill-btn:hover {
-            background: #F9FAFB;
-            border-color: #3B82F6;
-            color: #1E3A8A;
-            transform: translateY(-1px);
-        }
-
-        .demo-pill-btn:active {
-            transform: scale(0.98);
-        }
-
-        .demo-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .dot-admin { background: #3B82F6; }
-        .dot-dosen { background: #F59E0B; }
-        .dot-mhs { background: #8B5CF6; }
-
         /* ── Footer / Back to home ── */
         .back-to-home {
             font-size: 0.825rem;
@@ -468,7 +405,7 @@
                     <div class="input-field-wrap">
                         <input type="email" id="email" name="email" class="pill-input"
                             placeholder="email@quizify.com" required autocomplete="email"
-                            value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" />
+                            value="<?= htmlspecialchars($defaultEmail) ?>" />
                     </div>
                 </div>
 
@@ -476,7 +413,8 @@
                     <label for="password" class="input-label">Password</label>
                     <div class="input-field-wrap">
                         <input type="password" id="password" name="password" class="pill-input"
-                            placeholder="••••••••" required autocomplete="current-password" />
+                            placeholder="••••••••" required autocomplete="current-password"
+                            value="<?= htmlspecialchars($defaultPassword) ?>" />
                         <button type="button" class="login-toggle-pw" id="togglePw" aria-label="Tampilkan password">
                             <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -497,26 +435,6 @@
                 <button type="submit" class="pill-submit">Login</button>
             </form>
 
-            <!-- Demo Accounts Divider -->
-            <div class="custom-divider">
-                <span class="divider-text">Or</span>
-            </div>
-
-            <!-- Demo Accounts Grid -->
-            <div class="demo-grid">
-                <button type="button" class="demo-pill-btn" onclick="fillDemo('admin@quizify.com','password')">
-                    <span class="demo-dot dot-admin"></span>
-                    <span>Admin</span>
-                </button>
-                <button type="button" class="demo-pill-btn" onclick="fillDemo('budi@quizify.com','password')">
-                    <span class="demo-dot dot-dosen"></span>
-                    <span>Dosen</span>
-                </button>
-                <button type="button" class="demo-pill-btn" onclick="fillDemo('andi@quizify.com','password')">
-                    <span class="demo-dot dot-mhs"></span>
-                    <span>Mahasiswa</span>
-                </button>
-            </div>
 
             <!-- Back to Home -->
             <div class="back-to-home">
@@ -538,20 +456,6 @@ toggleBtn.addEventListener('click', () => {
     toggleBtn.querySelector('.eye-closed').style.display = show ? 'block' : 'none';
 });
 
-// Autofill demo account
-function fillDemo(email, password) {
-    document.getElementById('email').value    = email;
-    document.getElementById('password').value = password;
-
-    // Visual feedback
-    const btn = event.currentTarget;
-    btn.style.borderColor = '#3B82F6';
-    btn.style.background = '#EFF6FF';
-    setTimeout(() => {
-        btn.style.borderColor = '';
-        btn.style.background = '';
-    }, 600);
-}
 
 // Auto-focus email input
 window.addEventListener('DOMContentLoaded', () => {

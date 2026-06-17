@@ -51,34 +51,11 @@ $activePage = isset($activePage) ? $activePage : 'dashboard';
             <span class="nav-text">Kelas</span>
         </a>
 
-        <div class="nav-group-label" style="margin-top: 0.75rem;">Pengaturan</div>
-
-        <a href="index.php?page=role" class="nav-item <?= $activePage === 'role' ? 'active' : '' ?>">
-            <span class="nav-icon">
-                <svg class="nav-svg" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-            </span>
-            <span class="nav-text">Role Management</span>
-        </a>
-
-        <a href="index.php?page=monitoring" class="nav-item <?= $activePage === 'monitoring' ? 'active' : '' ?>">
-            <span class="nav-icon">
-                <svg class="nav-svg" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            </span>
-            <span class="nav-text">Monitoring</span>
-        </a>
-
         <a href="index.php?page=admin-activity-log" class="nav-item <?= $activePage === 'activity-log' ? 'active' : '' ?>">
             <span class="nav-icon">
                 <svg class="nav-svg" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
             </span>
             <span class="nav-text">Activity Log</span>
-        </a>
-
-        <a href="index.php?page=profile" class="nav-item <?= $activePage === 'profile' ? 'active' : '' ?>">
-            <span class="nav-icon">
-                <svg class="nav-svg" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            </span>
-            <span class="nav-text">Profile</span>
         </a>
     </nav>
 
