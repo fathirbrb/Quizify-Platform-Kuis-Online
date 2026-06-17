@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: 220px 1fr;
     min-height: 100vh;
+    transition: grid-template-columns 0.25s ease;
 }
 
 
@@ -16,12 +17,14 @@
     top: 0;
     height: 100vh;
     overflow-y: auto;
+    transition: padding 0.25s ease, width 0.25s ease;
 }
 
 .sidebar-logo {
     padding: 0.5rem 0.75rem 1.25rem;
     border-bottom: 1px solid var(--gray-200);
     margin-bottom: 1rem;
+    transition: padding 0.25s ease, margin-bottom 0.25s ease;
 }
 
 .sidebar-logo .logo-text {
@@ -1037,11 +1040,11 @@
     
     .sidebar-collapsed .sidebar-logo {
         border-bottom: none !important;
-        margin-bottom: 0.5rem !important;
-        padding: 0.5rem 0 !important;
+        margin-bottom: 1rem !important;
+        padding: 0.5rem 0 1.25rem !important;
         width: 100% !important;
         display: flex !important;
-        flex-direction: column !important;
+        flex-direction: row !important;
         justify-content: center !important;
         align-items: center !important;
         gap: 0.35rem !important;
